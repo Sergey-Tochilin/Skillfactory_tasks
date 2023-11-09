@@ -23,6 +23,9 @@ class Author(models.Model):
         self.rating = post_rating * 3 + comments_rating + posts_comments_rating
         self.save()
 
+    def __str__(self):
+        return self.user.username.title()
+
 
 
 class Category(models.Model):
@@ -62,6 +65,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.text[:20]}...'
+
+    def get_absolute_url(self):
+        return f'/news/{self.id}'
 
 
 class Comment(models.Model):

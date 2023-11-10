@@ -19,7 +19,11 @@
             <td>{{ post.date|date:'d M Y' }}</td>
             <td>{{ post.text|censor }}</td>
             <td>{{post.author }}</td>
-            <td>{{ post.category }}</td>
+            <td>
+                {% for cat in post.category.all %}
+                    {{ cat.name }}
+                {% endfor %}
+            </td>
             <td>{{ post.type }}</td>
         </tr>
 </table>

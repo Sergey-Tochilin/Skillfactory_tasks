@@ -1,4 +1,7 @@
+from django.shortcuts import render
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView
+
+from django.core.paginator import Paginator
 
 from .filters import PostFilter
 from .forms import PostForm
@@ -12,9 +15,14 @@ class PostList(ListView):
     context_object_name = 'posts'
     paginate_by = 10
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+        context['filter'] = self.filterset
         return context
 
 #Дженерик вывода 1 новости
@@ -52,10 +60,17 @@ class PostSearch(ListView):
     ordering = '-date'
     template_name = 'search.html'
     context_object_name = 'posts'
-    paginate_by = 1
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = PostFilter(self.request.GET,  queryset)
+        if self.request.GET:
+            return self.filterset.qs
+        return Post.objects.none()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+        context['filter'] = self.filterset
         return context
 

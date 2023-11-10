@@ -7,6 +7,7 @@ urlpatterns = [
     path('create/', PostCreateView.as_view(), name='news_add'),
     path('create/<int:pk>', PostUpdateView.as_view(), name='news_edit'),
     path('delete/<int:pk>', PostDeleteView.as_view(), name='news_delete'),
-    path('search/', PostSearch.as_view(), name='search')
+    path('search/', PostSearch.as_view(), name='search'),
+    path('home/', PostList.as_view(), name='home'),
 
 ]

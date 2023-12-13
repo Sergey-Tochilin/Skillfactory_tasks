@@ -7,6 +7,12 @@
 <hr>
 <h1>Все новости</h1>
 <a href="{% url 'search' %}"><u><h2>Поиск новостей</h2></u></a>
+    {% if request.user.username %}
+        <h2>{{ request.user.username }}</h2>
+        <button><a href="{% url 'profile' %}">В личный кабинет</a></button>
+    {% else %}
+        <button><a href="{% url 'profile' %}">Войти или зарегистрироваться</a></button>
+    {% endif %}
 <hr>
 {% endblock title %}
 

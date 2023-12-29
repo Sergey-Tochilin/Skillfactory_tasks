@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, UpdateView, CreateView, DetailView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
@@ -7,16 +7,8 @@ from django.core.paginator import Paginator
 
 from .filters import PostFilter
 from .forms import PostForm
-from .models import Post
+from .models import Post, Category
 
-
-@login_required
-def upgrade_me(request):
-    user = request.user
-    author_group = Group.objects.get(name='authors')
-    if not request.user.groups.filter(name='authors').exists():
-        author_group.user_set.add(user)
-    return redirect('profile')
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'protect/index.html'
@@ -25,6 +17,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
         return context
+
+
 
 class PostList(ListView):
     model = Post
@@ -38,10 +32,15 @@ class PostList(ListView):
         self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filter'] = self.filterset
-        return context
+
+
+@login_required
+def upgrade_me(request):
+    user = request.user
+    author_group = Group.objects.get(name='authors')
+    if not request.user.groups.filter(name='authors').exists():
+        author_group.user_set.add(user)
+    return redirect('profile')
 
 #Дженерик вывода 1 новости
 class PostDetailView(DetailView):
@@ -50,13 +49,13 @@ class PostDetailView(DetailView):
 
 #Дженерик создания новости
 class PostCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = ('news_p.add.post')
+    permission_required = ('news_p.add.post',)
     template_name = 'news_add.html'
     form_class = PostForm
 
 #дженерик изменения новости
-class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = ('news_p.change.post')
+class PostUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_p.change.post',)
     template_name = 'news_add.html'
     form_class = PostForm
 
@@ -71,7 +70,7 @@ class PostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 class PostDeleteView(DeleteView):
     template_name = 'post_delete.html'
     queryset = Post.objects.all()
-    success_url = '/news/'
+    success_url = '/'
 
 
 #Дженерик для поиска
@@ -93,4 +92,31 @@ class PostSearch(ListView):
         context = super().get_context_data(**kwargs)
         context['filter'] = self.filterset
         return context
+
+
+
+class CategoryListView(PostList):
+    model = Post
+    template_name = 'category_list.html'
+    context_object_name = 'category_news_list'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(category=self.category).order_by('-date')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+        context['category'] = self.category
+        return context
+
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+
+    message = 'Вы успешно подписались на рассылку новостей категории'
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
 

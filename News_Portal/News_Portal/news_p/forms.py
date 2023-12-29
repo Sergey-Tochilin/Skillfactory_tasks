@@ -18,3 +18,5 @@ class PostForm(ModelForm):
         fields = ['title', 'text', 'author', 'category', 'type']
 
 
+
+

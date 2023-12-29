@@ -9,11 +9,14 @@
     <hr>
     <button><a href="{% url 'home' %}">На главную страницу</a></button>
     <button><a href="{% url 'logout' %}">Выйти</a> </button>
-    <h2>Ваш логин: {{ request.user.username }}</h2>
-    <h2>Адрес электронной почты: {{ request.user.email }}</h2>
-    <hr>
     {% if is_not_authors %}
         <button><a href="{% url 'upgrade' %}">Стать автором</a> </button>
     {% endif %}
+    <h2>Ваш логин: {{ request.user.username }}</h2>
+    <h2>Адрес электронной почты: {{ request.user.email }}</h2>
+    <h2>Группы пользователя: {{ user.groups.all }}</h2>
+    <h2>Подписки на категории: {{ self.request.user.self.category.subscribers.all}} </h2>
+    <hr>
+
 </body>
 </html>

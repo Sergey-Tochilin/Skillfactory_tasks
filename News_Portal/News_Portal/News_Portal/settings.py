@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news_p',
+    'news_p.apps.NewsPConfig',
     'django.contrib.sites',
     'django.contrib.flatpages',
     'fpages',
@@ -89,7 +89,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/profile/'
+LOGIN_REDIRECT_URL = '/news/profile/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 WSGI_APPLICATION = 'News_Portal.wsgi.application'
@@ -146,3 +146,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_FILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+SITE_URL = 'http://127.0.0.1:8000'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'soobsheny.rassylka'
+EMAIL_HOST_PASSWORD = 'imdhsurxppggvwrd'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = 'soobsheny.rassylka@yandex.ru'

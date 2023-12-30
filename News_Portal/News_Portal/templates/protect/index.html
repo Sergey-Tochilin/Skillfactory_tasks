@@ -14,7 +14,7 @@
     {% endif %}
     <h2>Ваш логин: {{ request.user.username }}</h2>
     <h2>Адрес электронной почты: {{ request.user.email }}</h2>
-    <h2>Группы пользователя: {{ user.groups.all }}</h2>
+    <h2>Группы пользователя: {% for group in user.groups.all %} {{ group.name }}{% endfor %}</h2>
     <h2>Подписки на категории: {{ self.request.user.self.category.subscribers.all}} </h2>
     <hr>
 

@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 
 from .filters import PostFilter
 from .forms import PostForm
-from .models import Post, Category
+from .models import Post, Category, Author
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -40,6 +40,9 @@ def upgrade_me(request):
     author_group = Group.objects.get(name='authors')
     if not request.user.groups.filter(name='authors').exists():
         author_group.user_set.add(user)
+    #что бы стать автором нужно не только добавить его в группу, но и создать модель автора
+    #Создаю модель на основе этого пользователя, которого получаю через request
+    Author.objects.create(user=user)
     return redirect('profile')
 
 #Дженерик вывода 1 новости
@@ -49,13 +52,13 @@ class PostDetailView(DetailView):
 
 #Дженерик создания новости
 class PostCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = ('news_p.add.post',)
+    permission_required = ('news_p.add_post',)
     template_name = 'news_add.html'
     form_class = PostForm
 
 #дженерик изменения новости
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('news_p.change.post',)
+    permission_required = ('news_p.change_post',)
     template_name = 'news_add.html'
     form_class = PostForm
 

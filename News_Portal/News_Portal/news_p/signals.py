@@ -8,38 +8,46 @@ from .models import PostCategory
 
 
 
-def send_notifications(preview, pk, title, subscribers_email, subscribers_names):
-    html_content = render_to_string(
-        'post_created_email.html',
-        {
-            'text': preview,
-            'link': f'{settings.SITE_URL}/news/{pk}',
-            'sub_name': subscribers_names
+def send_notifications(preview, pk, title, subscribers_list):
+#из списка подписчиков при каждой итерации цила отправляется сообщение 1 подписчику с обращением
+#к конкретному подписчику в письме
+    for s in subscribers_list:
+        #получаю имя подписчика
+        sub_name = s.username
+        #получаю почту подписчика, она должна быть списком или словарем, что бы работало
+        sub_email = [s.email]
+        html_content = render_to_string(
+            'post_created_email.html',
+            {
+                'text': preview,
+                'link': f'{settings.SITE_URL}/news/{pk}',
+                'sub_name': sub_name
 
-        }
-    )
+            }
+        )
 
-    msg = EmailMultiAlternatives(
-        subject=title,
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers_email,
-    )
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+        msg = EmailMultiAlternatives(
+            subject=title,
+            body='',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=sub_email,
+        )
+        msg.attach_alternative(html_content, 'text/html')
+        msg.send()
 
 @receiver(m2m_changed, sender=PostCategory)
 
 def notify_about_new_post(sender, instance, **kwargs):
     if kwargs['action'] == 'post_add':
         categories = instance.category.all()
-        subscribers_emails = []
-        subscribers_names = []
+        #Список подписчиков его передать в функцию для рассылки
+        subscribers_list = []
+
 
         for cat in categories:
             subscribers = cat.subscribers.all()
-            subscribers_emails += [s.email for s in subscribers]
-            subscribers_names += [s.username for s in subscribers]
+            subscribers_list += [s for s in subscribers]
 
 
-        send_notifications(instance.preview, instance.pk, instance.title, subscribers_emails, subscribers_names)
+
+        send_notifications(instance.preview, instance.pk, instance.title, subscribers_list)

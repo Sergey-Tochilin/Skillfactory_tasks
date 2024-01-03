@@ -20,12 +20,19 @@
         <td> Заголовок </td>
         <td> Дата публикации </td>
         <td> Краткое содержание </td>
+        <td> Автор </td>
     </thead>
     {% for post in posts %}
         <tr>
-            <td>{{ post.title|censor }}</td>
+
+            <td>
+                <a href="{% url 'news_detail' post.id %}">{{ post.title|censor }}</a>
+                <a href="{% url 'news_edit' post.id %}"><u>Редактировать</u></a>
+                <a href="{% url 'news_delete' post.id %}"><u>Удалить</u></a>
+            </td>
             <td>{{ post.date|date:'d M Y' }}</td>
             <td>{{ post.text|truncatechars:20|censor }}</td>
+            <td> {{ post.author }}</td>
         </tr>
     {% endfor %}
 </table>

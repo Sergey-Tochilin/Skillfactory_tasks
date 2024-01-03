@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_apscheduler',
 ]
 
 ACCOUNT_FORMS = {'signup': 'news_p.forms.BasicSignupForm'}
@@ -91,6 +92,11 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/news/profile/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+#Для подтверждения почты при регистрации
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 WSGI_APPLICATION = 'News_Portal.wsgi.application'
 
@@ -143,7 +149,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_FILES_DIRS = [
+STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
@@ -155,3 +161,10 @@ EMAIL_HOST_USER = 'soobsheny.rassylka'
 EMAIL_HOST_PASSWORD = 'imdhsurxppggvwrd'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'soobsheny.rassylka@yandex.ru'
+
+# формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам)
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+
+# если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше,
+# но как правило, это сильно бьёт по производительности сервера
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds

@@ -10,6 +10,7 @@ class BasicSignupForm(SignupForm):
         user = super(BasicSignupForm, self).save(request)
         common_group = Group.objects.get(name='common')
         common_group.user_set.add(user)
+
         return user
 
 class PostForm(ModelForm):

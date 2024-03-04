@@ -73,7 +73,7 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
 class PostDeleteView(DeleteView):
     template_name = 'post_delete.html'
     queryset = Post.objects.all()
-    success_url = '/'
+    success_url = '/news/'
 
 
 #Дженерик для поиска

@@ -1,3 +1,5 @@
+'''
+Закоментировал, что бы рассылка работала через Redis и Celery
 import logging
 import datetime
 
@@ -100,3 +102,4 @@ class Command(BaseCommand):
             logger.info("Stopping scheduler...")
             scheduler.shutdown()
             logger.info("Scheduler shut down successfully!")
+'''

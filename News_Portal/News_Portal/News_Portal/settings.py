@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-o0ee__ghgt-2g*qh51@!_=m38k9lgwe@oekgp8-p^g(m5p0-ej'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -170,6 +170,7 @@ EMAIL_HOST_USER = 'soobsheny.rassylka'
 EMAIL_HOST_PASSWORD = 'imdhsurxppggvwrd'
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'soobsheny.rassylka@yandex.ru'
+SERVER_EMAIL = 'soobsheny.rassylka@yandex.ru' #С этой почты отправляются сообщения админам
 
 # формат даты, которую будет воспринимать наш задачник (вспоминаем модуль по фильтрам)
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
@@ -275,7 +276,7 @@ LOGGING = {
         },
 
         'mail_admins': {
-            'level': 'INFO', #ERROR поставил инфо для проверки рассылки по имейлу
+            'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler',
             'formatter': 'email'
@@ -286,13 +287,13 @@ LOGGING = {
     'loggers': {
         #Регистратор верхнего уровня
         'django': {
-            'handlers': ['console', 'console_warning', 'console_error', 'general', 'mail_admins'],#указать обработчики
-            'propagate': True #Надо ставить тру, что бы передавались события в уровень выше
+            'handlers': ['console', 'console_warning', 'console_error', 'general'],#указать обработчики
+            'propagate': True #Надо ставить True, что бы передавались события в уровень выше
         },
         #Регистратор обработки запроса
         'django.request': {
             'handlers': ['errors', 'mail_admins'],
-            'propagate': True #если фолс, то они будут отображаться только в одном регистраторе
+            'propagate': True #если False, то они будут отображаться только в одном регистраторе
         },
         #Регистратор запуска сервера
         'django.server': {

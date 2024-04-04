@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
+from django.utils.translation import gettext as _
+from django.utils.translation import pgettext_lazy
 
 
 class Author(models.Model):
@@ -31,7 +33,7 @@ class Author(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, help_text=_('category_name'), unique=True)
     subscribers = models.ManyToManyField(User, blank=True, null=True, related_name='categories')
 
     def __str__(self):
@@ -44,14 +46,14 @@ class Post(models.Model):
     article = "AR"
     POST_TYPE = [(news, 'Новость'), (article, 'Статья'),]
 
-    type = models.CharField(max_length=2, choices=POST_TYPE, default=news)
+    type = models.CharField(max_length=2, help_text=_('posts_type'), choices=POST_TYPE, default=news)
     date = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=255)
-    text = models.TextField()
-    rating = models.IntegerField(default=0)
+    title = models.CharField(max_length=255, help_text=_('title'))
+    text = models.TextField(help_text=_('posts_text'))
+    rating = models.IntegerField(default=0, help_text=_('rating'))
 
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    category = models.ManyToManyField(Category, through='PostCategory')
+    author = models.ForeignKey(Author, on_delete=models.CASCADE, help_text=_('choise_author'))
+    category = models.ManyToManyField(Category, through='PostCategory', help_text=_('choice_category'))
 
     def preview(self):
         prew_text = self.text[0:124] + '...'

@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
-import logging
+import logging #для логирования
 
-logger = logging.getLogger('django')
+logger = logging.getLogger('django') # для логирования
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,6 +62,7 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',#для локализации
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -136,11 +137,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'#код для перевода на этот язык будет переводиться
+LANGUAGES = [
+    ('en-us', 'English'),
+    ('ru', 'Русский')
+]
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True #Интернационализация для локализации
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 
 USE_TZ = True
 

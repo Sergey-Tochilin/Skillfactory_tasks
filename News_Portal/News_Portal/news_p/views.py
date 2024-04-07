@@ -3,11 +3,13 @@ from django.views.generic import ListView, UpdateView, CreateView, DetailView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
+from django.utils import timezone
 
 from .filters import PostFilter
 from .forms import PostForm
 from .models import Post, Category, Author
+
+import pytz
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -26,6 +28,14 @@ class PostList(ListView):
     template_name = 'all_news.html'
     context_object_name = 'posts'
     paginate_by = 10
+    
+    current_time = timezone.now()
+    timezones = pytz.common_timezones  # добавляем в контекст все доступные часовые пояса
+
+
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect('/')
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -3,23 +3,17 @@
 {% load custom_filters %}
 {% block title %}
 <hr>
-<h1>Добавить новость:</h1>
+<h1>{% trans 'Add news:'%}</h1>
 <hr>
 {% endblock title %}
 
 {% block content %}
-<h3>Заполните поля, для создания новости/статьи:</h3>
-<h3>{% trans 'test translate' %}</h3>
+<h3>{% trans 'Fill in the fields to create news or article:' %}</h3>
 <form method="POST">
   {% csrf_token %}
-    <!-- {{ form }} -->
-    {% for field in form %}
-    <!-- вот тут сделать условие зависящее от языка и уже выводить либо field.label либо field.help_text -->
-      {{ field.label }}/{{ field.help_text }}
-      {{ field }}
-      <hr>
-    {% endfor %}
+    {{ form }}
+    <hr>
   <hr>
-  <input type="submit" value="Добавить">
+  <input type="submit" value="{% trans 'Add' %}">
 </form>
 {% endblock content %}

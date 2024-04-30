@@ -22,7 +22,10 @@ from news_p import views
 
 router = routers.DefaultRouter()
 router.register(r'news', views.NewsListViewset)
-#router.register(r'articles', views.ArticlesListViewset)
+router.register(r'user', views.UserViewset)
+router.register(r'author', views.AuthorViewset)
+router.register(r'category', views.CategoryViewset)
+router.register(r'articles', views.ArticlesListViewset)
 
 
 
@@ -35,5 +38,5 @@ urlpatterns = [
     path('news/', include('news_p.urls')),
     path('accounts/', include('allauth.urls')),
     path('api/', include(router.urls)),
-    #path('api-own/', include('api.urls'))
+
 ]

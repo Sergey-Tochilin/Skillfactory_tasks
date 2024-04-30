@@ -141,8 +141,20 @@ class NewsListViewset(viewsets.ModelViewSet):
     queryset = Post.objects.filter(type='NW')
     serializer_class = NewsSerializer
 
-#class ArticlesListViewset(viewsets.ModelViewSet):
-    #queryset = Post.objects.filter(type='AR')
-    #serializer_class = ArticlesSerializer
+class CategoryViewset(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class UserViewset(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class AuthorViewset(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+
+class ArticlesListViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(type='AR')
+    serializer_class = ArticlesSerializer
 
 
